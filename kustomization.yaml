@@ -1,0 +1,10 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: kymart
+namePrefix: kymart-
+configurations:
+  - k-config.yaml  
+bases:
+  - src/arttitleservice/k8s/
+  - src/artcreatorservice/k8s/
+  - src/artexplorerfrontend/k8s/
