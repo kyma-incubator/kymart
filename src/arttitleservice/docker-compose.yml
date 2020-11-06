@@ -1,7 +1,7 @@
 version: '3.5'
 services:
   arttitleservice:
-    image: kymart/arttitleservice:latest
+    image: ghcr.io/kyma-incubator/kymart/arttitleservice:latest
     build:
       context: .
       dockerfile: ./Dockerfile

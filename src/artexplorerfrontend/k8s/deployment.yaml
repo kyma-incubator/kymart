@@ -8,7 +8,7 @@ spec:
     spec:
       containers:
         - name: artexplorer
-          image: kymart/artexplorerfrontend
+          image: ghcr.io/kyma-incubator/kymart/artexplorerfrontend:latest
           imagePullPolicy: Always
           ports:
             - name: http

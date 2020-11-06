@@ -1,7 +1,7 @@
 version: '3.5'
 services:
   artcreatorservice:
-    image: kymart/artcreatorservice:latest
+    image: ghcr.io/kyma-incubator/kymart/artcreatorservice:latest
     build:
       context: .
       dockerfile: ./Dockerfile

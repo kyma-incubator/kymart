@@ -1,7 +1,7 @@
 version: '3.5'
 services:
   artexplorerfrontend:
-    image: kymart/artexplorerfrontend:latest
+    image: ghcr.io/kyma-incubator/kymart/artexplorerfrontend:latest
     build:
       context: .
       dockerfile: ./Dockerfile
