@@ -1,0 +1,11 @@
+version: '3.5'
+services:
+  artexplorerfrontend:
+    image: kymart/artexplorerfrontend:latest
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    container_name: 'artexplorerfrontend'       
+    restart: 'always'
+    ports:
+      - '8080:80'

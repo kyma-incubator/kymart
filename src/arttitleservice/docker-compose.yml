@@ -1,0 +1,11 @@
+version: '3.5'
+services:
+  arttitleservice:
+    image: kymart/arttitleservice:latest
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    container_name: 'arttitleservice'       
+    restart: 'always'
+    ports:
+      - '8080:8080'

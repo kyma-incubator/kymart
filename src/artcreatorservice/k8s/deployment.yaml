@@ -1,0 +1,15 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: artcreator
+spec:
+  replicas: 1
+  template:
+    spec:
+      containers:
+        - name: artcreator
+          image: kymart/artcreatorservice
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 8080

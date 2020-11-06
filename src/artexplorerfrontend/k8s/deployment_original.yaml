@@ -1,0 +1,74 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: artexplorerfrontend
+  labels:
+    app: artexplorerfrontend
+data:
+  config.js: |-
+    window.Config = {
+      API_URL: "https://api-mssql-function.vv-dev.kloud.shoot.canary.k8s-hana.ondemand.com",
+    };
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: artexplorerfrontend
+  labels:
+    app: artexplorerfrontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: artexplorerfrontend
+  template:
+    metadata:
+      labels:
+        app: artexplorerfrontend
+    spec:
+      containers:
+        - name: artexplorerfrontend
+          image: kymart/artexplorerfrontend
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 80
+          volumeMounts:
+            - name: config-volume
+              mountPath: /usr/share/nginx/html/config.js
+              subPath: config.js
+      volumes:
+        - name: config-volume
+          configMap:
+            name: artexplorerfrontend
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: artexplorerfrontend
+  labels:
+    app: artexplorerfrontend
+spec:
+  ports:
+    - name: http
+      port: 80
+  selector:
+    app: artexplorerfrontend
+---
+apiVersion: gateway.kyma-project.io/v1alpha1
+kind: APIRule
+metadata:
+  name: artexplorerfrontend
+spec:
+  gateway: kyma-gateway.kyma-system.svc.cluster.local
+  rules:
+    - path: /.*
+      accessStrategies:
+        - config: {}
+          handler: noop
+      methods:
+        - GET
+  service:
+    host: artexplorerfrontend
+    name: artexplorerfrontend
+    port: 80

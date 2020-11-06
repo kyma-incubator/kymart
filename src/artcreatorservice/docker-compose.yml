@@ -1,0 +1,11 @@
+version: '3.5'
+services:
+  artcreatorservice:
+    image: kymart/artcreatorservice:latest
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    container_name: 'artcreatorservice'       
+    restart: 'always'
+    ports:
+      - '8080:8080'
