@@ -7,5 +7,7 @@ services:
       dockerfile: ./Dockerfile
     container_name: 'arttitleservice'       
     restart: 'always'
+    # volumes: 
+    #   - .:/app    
     ports:
       - '8080:8080'
