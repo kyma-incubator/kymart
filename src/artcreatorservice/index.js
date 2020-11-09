@@ -12,31 +12,38 @@ getAPIHostAndPort = function (req, appendEndSlash) {
 
 http
   .createServer(function (req, res) {
-    const { rawHeaders, httpVersion, method, socket, url } = req;
+    const { headers , httpVersion, method, socket, url } = req;
     const { remoteAddress, remoteFamily } = socket;    
     console.log(
       JSON.stringify({
         timestamp: Date.now(),
-        rawHeaders,
+        headers ,
         httpVersion,
         method,
         remoteAddress,
         remoteFamily,
         url
       })
-    );    
-    if (req.url.includes('/art/')) {
-      const url = new URL(req.url, getAPIHostAndPort(req, true));
+    );
+    switch (true) {
+      case /^\/art\//.test(req.url):
+        const url = new URL(req.url, getAPIHostAndPort(req, true));
       
-      const seed = req.url.split('/art/')[1]
-      request
-        .get(
-          `https://cdn.vcloud42.com/file/art42-cdn/cubism/seed_${seed}.jpg`
-        )
-        .pipe(res);
-    } else {
-      res.statusCode = 404;
-      res.end('Not Found')
-    }
+        const seed = req.url.split('/art/')[1]
+        request
+          .get(
+            `https://cdn.vcloud42.com/file/art42-cdn/cubism/seed_${seed}.jpg`
+          )
+          .pipe(res);        
+        break;
+        case /^\/heartbeat\//.test(req.url):
+          res.statusCode = 200;
+          res.end('Ok')      
+          break;    
+      default:
+        res.statusCode = 404;
+        res.end('Not Found')        
+        break;
+    }    
   })
   .listen(8080, '0.0.0.0', () => console.log(`server listening`));

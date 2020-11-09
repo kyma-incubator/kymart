@@ -3,4 +3,4 @@ nameReference:
     version: v1
     fieldSpecs:
       - path: spec/service/name
-        kind: APIRule
+        kind: APIRule      

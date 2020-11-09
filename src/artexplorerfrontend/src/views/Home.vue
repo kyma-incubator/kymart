@@ -23,6 +23,7 @@ export default {
     async function randomize() {
       randomSeed.value = `${randomIntFromInterval(0, 450000, 10)}`;
       imgSrc.value = `${window.artexplorerfrontendConfig.ART_CREATOR_API}/${randomSeed.value}`;
+      title.value = 'Generating Title ...';
       await fetch(`${window.artexplorerfrontendConfig.ART_TITLE_API}/${randomSeed.value}`)
               .then(result => result.json())
               .then(result => {
@@ -31,7 +32,7 @@ export default {
     }
     const randomSeed = ref(null);
     const imgSrc = ref(null);
-    const title = ref('No Title');
+    const title = ref('Generating Title ...');
     randomize();
     return {
       randomSeed,
