@@ -7,7 +7,7 @@ COPY . .
 RUN yarn build
 
 # production stage
-FROM nginx:stable-alpine as production-stage
+FROM nginx:1.19.4-alpine as production-stage
 COPY ./build/nginx.conf /etc/nginx/nginx.conf
 COPY ./build/nginx.default.conf /etc/nginx/conf.d/default.conf
 COPY --from=build-stage /app/dist /usr/share/nginx/html

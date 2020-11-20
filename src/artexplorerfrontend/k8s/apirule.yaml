@@ -5,12 +5,50 @@ metadata:
 spec:
   gateway: kyma-gateway.kyma-system.svc.cluster.local
   rules:
+    - path: /likes/.*
+      accessStrategies:
+        - config:
+            jwks_urls:
+              - 'https://www.googleapis.com/oauth2/v3/certs'
+            trusted_issuers:
+              - 'https://accounts.google.com'
+          handler: jwt
+      methods:
+        - GET
+        - POST
+        - PUT
+        - PATCH
+        - DELETE
+        - HEAD
+    # - path: /title/.*
+    #   accessStrategies:
+    #     - config:
+    #         jwks_urls:
+    #           - 'https://www.googleapis.com/oauth2/v3/certs'
+    #         trusted_issuers:
+    #           - 'https://accounts.google.com'
+    #       handler: jwt
+    #   methods:
+    #     - GET
+    #     - HEAD   
+    # - path: /art/.*
+    #   accessStrategies:
+    #     - config:
+    #         jwks_urls:
+    #           - 'https://www.googleapis.com/oauth2/v3/certs'
+    #         trusted_issuers:
+    #           - 'https://accounts.google.com'
+    #       handler: jwt
+    #   methods:
+    #     - GET
+    #     - HEAD                       
     - path: /.*
       accessStrategies:
         - config: {}
-          handler: noop
+          handler: allow
       methods:
         - GET
+        - HEAD  
   service:
     host: art-explorer
     name: artexplorer

@@ -4,10 +4,11 @@ commonLabels:
   app: artexplorer
   type: frontend
 configMapGenerator:
-  - name: artexplorer
+  - name: artexplorer-nginx
     files:
-    - config.js
+    - ./config/nginx/default.conf  
 resources:
   - deployment.yaml
   - service.yaml
   - apirule.yaml
+  - autoscaler.yaml

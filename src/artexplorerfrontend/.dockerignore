@@ -1,2 +1,4 @@
 node_modules
 k8s
+Dockerfile
+docker-compose.yml

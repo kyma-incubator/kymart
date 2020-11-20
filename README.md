@@ -1,5 +1,9 @@
 # Kymart
 
+Create Namespace:
+```
+kubectl create namespace kymart
+```
 
 To Deploy :
 

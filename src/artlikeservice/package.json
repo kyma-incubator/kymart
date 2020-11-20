@@ -1,0 +1,14 @@
+{
+  "name": "artlikeservice",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "serve": "json-server --port 8080 --host 0.0.0.0 ./data.json"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "json-server": "^0.16.3"
+  }
+}

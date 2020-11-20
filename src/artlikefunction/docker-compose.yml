@@ -1,0 +1,11 @@
+version: '3.5'
+services:
+  artlike:
+    image: ghcr.io/kyma-incubator/kymart/artlike:latest
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    container_name: 'artlike'       
+    restart: 'always'
+    ports:
+      - '8080:8080'
