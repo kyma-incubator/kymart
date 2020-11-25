@@ -8,6 +8,12 @@ spec:
     - path: /likes/.*
       accessStrategies:
         - config:
+            # required_scope:
+            #   - scope-a
+            #   - scope-b    
+            #  look ory - oathkeeper
+            target_audience:
+              - 861250339529-05utav2k4t002uc2j047f355qe3kkrp9.apps.googleusercontent.com
             jwks_urls:
               - 'https://www.googleapis.com/oauth2/v3/certs'
             trusted_issuers:
