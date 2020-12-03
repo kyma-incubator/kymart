@@ -4,20 +4,21 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { useStore } from 'vuex';
+import { mapActions } from '../store';
 
 export default {
   name: 'OidcPopupCallback',
-  methods: {
-    ...mapActions('oidcStore', [
+  setup() {
+    const store = useStore();
+    const {oidcSignInPopupCallback} = mapActions(store, 'oidcStore', [
       'oidcSignInPopupCallback'
-    ])
-  },
-  created () {
-    this.oidcSignInPopupCallback()
+    ]);
+    oidcSignInPopupCallback()
       .catch((err) => {
         console.error(err) // Handle errors any way you want
       })
-  }
+    return {};
+  },
 }
 </script>
