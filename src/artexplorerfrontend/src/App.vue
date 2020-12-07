@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    {{oidcIsAuthenticated}}
     <div v-if="hasAccess" id="nav">
       <router-link to="/">Home</router-link> |
       <router-link to="/protected">Protected</router-link> |
@@ -11,57 +12,83 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from "vuex";
+import {onMounted, onUnmounted, computed} from 'vue';
+import {useStore} from 'vuex';
+import {useRouter, useRoute} from 'vue-router';
+import { mapActions } from './store';
 
 export default {
   name: "App",
-  computed: {
-    ...mapGetters("oidcStore", ["oidcIsAuthenticated"]),
-    hasAccess: function () {
-      return this.oidcIsAuthenticated || this.$route.meta.isPublic;
-    },
-  },
-  methods: {
-    ...mapActions("oidcStore", ["authenticateOidcPopup", "removeOidcUser"]),
-    userLoaded: function (e) {
+  setup() {
+    const store = useStore();
+    const router = useRouter();
+    const route = useRoute();
+
+    const {authenticateOidcPopup, removeOidcUser} = mapActions(store, "oidcStore", ["authenticateOidcPopup", "removeOidcUser"]);
+
+    const oidcIsAuthenticated = computed(() => store.getters['oidcStore/oidcIsAuthenticated'])
+    
+    const hasAccess = computed(() => {
+      return oidcIsAuthenticated.value || route.meta.isPublic
+    });
+    
+    const userLoaded = e => {
       console.log(
         "I am listening to the user loaded event in vuex-oidc",
         e.detail
       );
-    },
-    oidcError: function (e) {
+    };
+    
+    const oidcError = e => {
       console.log(
         "I am listening to the oidc oidcError event in vuex-oidc",
         e.detail
       );
-    },
-    automaticSilentRenewError: function (e) {
+    };
+
+    const automaticSilentRenewError = e => {
       console.log(
         "I am listening to the automaticSilentRenewError event in vuex-oidc",
         e.detail
       );
-    },
-    signOut: function () {
-      this.removeOidcUser().then(() => {
-        this.$router.push("/");
-      });
-    },
-  },
-  mounted() {
-    window.addEventListener("vuexoidc:userLoaded", this.userLoaded);
-    window.addEventListener("vuexoidc:oidcError", this.oidcError);
-    window.addEventListener(
-      "vuexoidc:automaticSilentRenewError",
-      this.automaticSilentRenewError
-    );
-  },
-  unmounted() {
-    window.removeEventListener("vuexoidc:userLoaded", this.userLoaded);
-    window.removeEventListener("vuexoidc:oidcError", this.oidcError);
-    window.removeEventListener(
-      "vuexoidc:automaticSilentRenewError",
-      this.automaticSilentRenewError
-    );
+    };
+
+    const signOut = () => {
+      removeOidcUser().then(() => router.push("/"));
+    };
+
+    onMounted(() => {
+      window.addEventListener("vuexoidc:userLoaded", userLoaded);
+      window.addEventListener("vuexoidc:oidcError", oidcError);
+      window.addEventListener(
+        "vuexoidc:automaticSilentRenewError",
+        automaticSilentRenewError
+      );
+    });
+
+    onUnmounted(() => {
+      window.removeEventListener("vuexoidc:userLoaded", userLoaded);
+      window.removeEventListener("vuexoidc:oidcError", oidcError);
+      window.removeEventListener(
+        "vuexoidc:automaticSilentRenewError",
+        automaticSilentRenewError
+      );
+    });
+
+    return {
+      oidcIsAuthenticated,
+      hasAccess,
+
+      authenticateOidcPopup, 
+      removeOidcUser,
+
+      userLoaded,
+      oidcError,
+      automaticSilentRenewError,
+      signOut,
+      
+      router,
+    }
   },
 };
 </script>
