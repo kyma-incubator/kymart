@@ -1,7 +1,7 @@
 <template>
   <div class="artImage">
     <h1>{{ imgTitle }}</h1>
-    <img :src="imgSrc" :alt="imgTitle">
+    <img :src="imgSrc" :alt="imgTitle" />
   </div>
 </template>
 

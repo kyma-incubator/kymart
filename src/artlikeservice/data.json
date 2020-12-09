@@ -1,9 +1,3 @@
 {
-  "likes": [
-    {
-      "id": 1,
-      "title": "json-server",
-      "author": "valentin"
-    }
-  ]
+  "likes": []
 }
