@@ -1,6 +1,5 @@
 <template>
   <div id="app">
-    {{oidcIsAuthenticated}}
     <div v-if="hasAccess" id="nav">
       <router-link to="/">Home</router-link> |
       <router-link to="/protected">Protected</router-link> |
