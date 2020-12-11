@@ -38,7 +38,7 @@ export default {
 
     function setRandomSeed() {
       randomSeed.value = `${randomIntFromInterval(0, 450000, 10)}`;
-      router.push({ path: `home/${randomSeed.value}` });
+      router.push({ path: `/image/${randomSeed.value}` });
     }
 
     async function reload() {

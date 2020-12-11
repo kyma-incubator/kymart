@@ -10,14 +10,23 @@
 </template>
 
 <script>
+import { useStore } from 'vuex';
+import {mapGetters} from '../store';
+
 export default {
   name: "GalleryImage",
   props: {
     image: Object
   },
   setup(props, { emit }) {
+    console.log(props);
+    const store = useStore();
+    const { oidcIdToken } = mapGetters(store, "oidcStore", ["oidcIdToken"]);
+
     async function deleteImage(imageId) {
-      await fetch(`http://0.0.0.0:8081/likes/${imageId}`, { method: "DELETE" });
+      await fetch(`/likes/${imageId}`, { 
+        method: "DELETE", headers: { Authorization: `Bearer ${oidcIdToken}` } 
+      });
       emit("delete-image", imageId);
     }
 

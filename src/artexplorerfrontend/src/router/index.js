@@ -8,12 +8,16 @@ import store from "@/store/index.js";
 
 const routes = [
   {
-    path: "/:artId?",
+    path: "/",
+    redirect: "/image/",
+  },
+  {
+    path: "/image/:artId?",
     name: "Home",
     component: Home,
     meta: {
-      isPublic: true
-    }
+      isPublic: true,
+    },
   },
   {
     path: "/about",
@@ -22,38 +26,38 @@ const routes = [
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: () =>
-      import(/* webpackChunkName: "about" */ "../views/About.vue")
+      import(/* webpackChunkName: "about" */ "../views/About.vue"),
   },
   {
     path: "/protected",
     name: "protected",
     component: () =>
-      import(/* webpackChunkName: "protected" */ "../views/Protected.vue")
+      import(/* webpackChunkName: "protected" */ "../views/Protected.vue"),
   },
   {
     path: "/favourites",
     name: "favourites",
     component: () =>
-      import(/* webpackChunkName: "favourites" */ "../views/Favourites.vue")
+      import(/* webpackChunkName: "favourites" */ "../views/Favourites.vue"),
   },
   {
     path: "/oidc-callback", // Needs to match redirectUri in you oidcSettings
     name: "oidcCallback",
-    component: OidcCallback
+    component: OidcCallback,
   },
   {
     path: "/oidc-popup-callback", // Needs to match popupRedirectUri in you oidcSettings
     name: "oidcPopupCallback",
-    component: OidcPopupCallback
+    component: OidcPopupCallback,
   },
   {
     path: "/oidc-callback-error", // Needs to match redirect_uri in you oidcSettings
     name: "oidcCallbackError",
     component: OidcCallbackError,
     meta: {
-      isPublic: true
-    }
-  }
+      isPublic: true,
+    },
+  },
 ];
 
 const router = createRouter({

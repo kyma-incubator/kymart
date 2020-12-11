@@ -1,7 +1,7 @@
 <template>
   <div>
     <h1>Favourites</h1>
-    <ul>
+    <ul v-if="images.length">
       <GalleryImage
         v-for="image in images"
         :key="image.id"
@@ -9,6 +9,7 @@
         v-on:delete-image="deleteImage($event)"
       />
     </ul>
+    <p v-else>Looks like there's nothing here.</p>
   </div>
 </template>
 
@@ -31,9 +32,11 @@ export default {
 
     async function fetchImages() {
       const response = await fetch(
-        `http://0.0.0.0:8081/likes?email=${oidcUser.email}`
+        `/likes?email=${oidcUser.email}`
       );
-      images.value = await response.json();
+      const result = await response.json();
+      // todo remove filtering after introducing
+      images.value = result.filter(i => !!i.imageId);
     }
 
     function deleteImage(imageId) {

@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <div v-if="hasAccess" id="nav">
-      <router-link to="/art">Home</router-link> |
+      <router-link to="/image">Home</router-link> |
       <router-link to="/protected">Protected</router-link> |
       <router-link to="/favourites" v-if="oidcIsAuthenticated"
         >Favourites</router-link
