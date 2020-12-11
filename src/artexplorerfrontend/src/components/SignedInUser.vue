@@ -24,30 +24,36 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex'
-import jsonMarkup from 'json-markup'
+import { useStore } from 'vuex';
+import jsonMarkup from 'json-markup';
+import { mapGetters, mapActions } from '../store';
 
 export default {
   name: 'SignedInUser',
-  computed: {
-    ...mapGetters('oidcStore', [
-      'oidcIsAuthenticated',
-      'oidcAuthenticationIsChecked',
-      'oidcUser',
-      'oidcIdToken',
-      'oidcIdTokenExp'
-    ]),
-    userDisplay: function () {
-      return jsonMarkup(this.oidcUser)
-    }
-  },
-  methods: {
-    ...mapActions('oidcStore', ['authenticateOidcSilent', 'removeOidcUser']),
-    reauthenticate () {
-      this.authenticateOidcSilent()
+  setup() {
+    const store = useStore();
+    const computed = mapGetters(store, 'oidcStore', [
+        'oidcIsAuthenticated',
+        'oidcAuthenticationIsChecked',
+        'oidcUser',
+        'oidcIdToken',
+        'oidcIdTokenExp'
+      ]);
+    
+    const userDisplay = jsonMarkup(computed.oidcUser);
+
+    const {authenticateOidcSilent, removeOidcUser} = mapActions(store, 'oidcStore', [
+      'authenticateOidcSilent',
+      'removeOidcUser'
+    ]);
+
+    function reauthenticate () {
+      authenticateOidcSilent()
         .catch(() => this.removeOidcUser())
     }
-  }
+    
+    return {...computed, userDisplay, authenticateOidcSilent, removeOidcUser, reauthenticate};
+  },
 }
 </script>
 
