@@ -19,7 +19,6 @@ export default {
     image: Object
   },
   setup(props, { emit }) {
-    console.log(props);
     const store = useStore();
     const { oidcIdToken } = mapGetters(store, "oidcStore", ["oidcIdToken"]);
 
