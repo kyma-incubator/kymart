@@ -4,7 +4,7 @@ namespace: kymart
 configurations:
   - k-config.yaml  
 bases:
-  - src/artlikeservice/k8s/
+  - src/artbackend/k8s/
   - src/arttitleservice/k8s/
   - src/artcreatorservice/k8s/
   - src/artexplorerfrontend/k8s/

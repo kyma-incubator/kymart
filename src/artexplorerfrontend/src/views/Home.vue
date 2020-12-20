@@ -2,7 +2,7 @@
   <div class="home" :key="randomSeed">
     <ArtImage :imgTitle="title" :imgSrc="imgSrc" />
     <button @click="randomize()">New Art</button>
-    <Likes :imgId="randomSeed" />
+    <Likes :imgId="randomSeed" :imgVersion="'v1'"/>
   </div>
 </template>
 
@@ -17,7 +17,7 @@ export default {
   name: "Home",
   components: {
     ArtImage,
-    Likes
+    Likes,
   },
   setup() {
     const route = useRoute();
@@ -46,7 +46,7 @@ export default {
       title.value = "Generating Title ...";
       await fetch(`/title/${randomSeed.value}`)
         .then(result => result.json())
-        .then(result => (title.value = result.title));
+        .then(result => title.value = result.title);
     }
 
     function randomize() {

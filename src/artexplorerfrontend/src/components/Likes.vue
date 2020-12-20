@@ -2,7 +2,7 @@
   <div>
     <p>Likes: {{ likesCount }}</p>
     <button v-if="oidcIsAuthenticated" @click="switchLike()">
-      {{ myLike ? "Unlike" : "Like" }}
+      {{ isLiked ? "Unlike" : "Like" }}
     </button>
   </div>
 </template>
@@ -12,14 +12,17 @@ import { ref } from "vue";
 import { useStore } from "vuex";
 import { mapGetters } from "../store";
 
+const server = 'https://localhost:8081';
+
 export default {
   name: "Likes",
   props: {
-    imgId: String
+    imgId: String,
+    imgVersion: String,
   },
   setup(props) {
     const likesCount = ref(0);
-    const myLike = ref(null);
+    const isLiked = ref(null);
 
     const store = useStore();
     const { oidcUser, oidcIdToken, oidcIsAuthenticated } = mapGetters(store, "oidcStore", [
@@ -27,28 +30,37 @@ export default {
       "oidcIdToken",
       "oidcIsAuthenticated",
     ]);
-  
+
     function fetchLikes() {
-      // const headers = {Authorization: `Bearer ${oidcIdToken}`};
-      return fetch(`/likes?imageId=${props.imgId}`)
+      let endpoint = `${server}/likes?imageId=${props.imgId}&imageVersion=${props.imgVersion}`;
+      if (oidcUser) {
+        endpoint += `&email=${oidcUser.email}`;
+      }
+      const headers = {Authorization: `Bearer ${oidcIdToken}`};
+      return fetch(endpoint, { headers })
         .then(result => result.json())
         .then(result => {
-          // todo remove filtering after introducing
-          result = result.filter(i => !!i.imageId);
-          likesCount.value = result.length;
-          myLike.value = result.find(e => e.email === oidcUser.email);
+          likesCount.value = result.likesCount;
+          isLiked.value = result.isLiked;
         });
     }
 
     async function Unlike() {
+      const body = {
+        imageId: props.imgId,
+        imageVersion: "v1",
+        email: oidcUser.email,
+      };
       try {
-        await fetch(`/likes/${myLike.value.id}`, {
+        await fetch(`${server}/likes`, {
           method: "DELETE",
           headers: {
             Authorization: `Bearer ${oidcIdToken}`,
-          }
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(body),
         });
-        myLike.value = null;
+        isLiked.value = false;
         likesCount.value--;
       } catch (e) {
         console.warn(e);
@@ -58,16 +70,16 @@ export default {
     async function Like() {
       const body = {
         imageId: props.imgId,
-        version: "v1",
+        imageVersion: "v1",
         email: oidcUser.email
       };
       try {
-        const response = await fetch("/likes", {
+        const response = await fetch(`${server}/likes`, {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(body)
+          headers: { "Content-Type": "application/json", Authorization: `Bearer ${oidcIdToken}`, },
+          body: JSON.stringify(body),
         });
-        myLike.value = await response.json();
+        isLiked.value = true;
         likesCount.value++;
       } catch (e) {
         console.warn(e);
@@ -75,7 +87,7 @@ export default {
     }
 
     async function switchLike() {
-      if (myLike.value) {
+      if (isLiked.value) {
         await Unlike();
       } else {
         await Like();
@@ -84,7 +96,7 @@ export default {
 
     fetchLikes();
 
-    return { likesCount, myLike, oidcIsAuthenticated, switchLike };
+    return { likesCount, isLiked, oidcIsAuthenticated, switchLike };
   }
 };
 </script>
