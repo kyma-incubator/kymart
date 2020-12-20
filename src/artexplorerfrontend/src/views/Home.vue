@@ -1,39 +1,61 @@
 <template>
   <div class="home" :key="randomSeed">
     <ArtImage :imgTitle="title" :imgSrc="imgSrc" />
-    <button @click="randomize()"> New Art</button>
+    <button @click="randomize()">New Art</button>
+    <Likes :imgId="randomSeed" />
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
 import ArtImage from "@/components/ArtImage.vue";
+import Likes from "@/components/Likes.vue";
+import { useRoute, useRouter } from "vue-router";
 import { ref } from "vue";
 
 export default {
   name: "Home",
   components: {
-    ArtImage
+    ArtImage,
+    Likes
   },
   setup() {
+    const route = useRoute();
+    const router = useRouter();
+
+    const randomSeed = ref(route.params.artId);
+    const imgSrc = ref(null);
+    const title = ref("Generating Title ...");
+
+    if (!randomSeed.value) {
+      setRandomSeed();
+    }
+
     function randomIntFromInterval(min, max, pad) {
       const randomNumber = Math.floor(Math.random() * (max - min + 1) + min);
       return pad ? `${randomNumber}`.padStart(pad, "0") : randomNumber;
     }
-    async function randomize() {
+
+    function setRandomSeed() {
       randomSeed.value = `${randomIntFromInterval(0, 450000, 10)}`;
-      imgSrc.value = `/art/${randomSeed.value}`;
-      title.value = 'Generating Title ...';
-      await fetch(`/title/${randomSeed.value}`)
-              .then(result => result.json())
-              .then(result => {
-                title.value = result.title
-              });      
+      router.push({ path: `/image/${randomSeed.value}` });
     }
-    const randomSeed = ref(null);
-    const imgSrc = ref(null);
-    const title = ref('Generating Title ...');
-    randomize();
+
+    async function reload() {
+      imgSrc.value = `/art/${randomSeed.value}`;
+      title.value = "Generating Title ...";
+      await fetch(`/title/${randomSeed.value}`)
+        .then(result => result.json())
+        .then(result => (title.value = result.title));
+    }
+
+    function randomize() {
+      setRandomSeed();
+      reload();
+    }
+
+    reload();
+
     return {
       randomSeed,
       imgSrc,

@@ -1,8 +1,12 @@
 <template>
   <div id="app">
     <div v-if="hasAccess" id="nav">
-      <router-link to="/">Home</router-link> |
+      <router-link to="/image">Home</router-link> |
       <router-link to="/protected">Protected</router-link> |
+      <router-link to="/favourites" v-if="oidcIsAuthenticated"
+        >Favourites</router-link
+      >
+      |
       <a v-if="oidcIsAuthenticated" href @click.prevent="signOut">Sign out</a>
       <a v-else href @click.prevent="authenticateOidcPopup">Sign in</a>
     </div>
@@ -11,10 +15,10 @@
 </template>
 
 <script>
-import {onMounted, onUnmounted, computed} from 'vue';
-import {useStore} from 'vuex';
-import {useRouter, useRoute} from 'vue-router';
-import { mapActions } from './store';
+import { onMounted, onUnmounted, computed } from "vue";
+import { useStore } from "vuex";
+import { useRouter, useRoute } from "vue-router";
+import { mapActions } from "./store";
 
 export default {
   name: "App",
@@ -23,21 +27,27 @@ export default {
     const router = useRouter();
     const route = useRoute();
 
-    const {authenticateOidcPopup, removeOidcUser} = mapActions(store, "oidcStore", ["authenticateOidcPopup", "removeOidcUser"]);
+    const { authenticateOidcPopup, removeOidcUser } = mapActions(
+      store,
+      "oidcStore",
+      ["authenticateOidcPopup", "removeOidcUser"]
+    );
 
-    const oidcIsAuthenticated = computed(() => store.getters['oidcStore/oidcIsAuthenticated'])
-    
+    const oidcIsAuthenticated = computed(
+      () => store.getters["oidcStore/oidcIsAuthenticated"]
+    );
+
     const hasAccess = computed(() => {
-      return oidcIsAuthenticated.value || route.meta.isPublic
+      return oidcIsAuthenticated.value || route.meta.isPublic;
     });
-    
+
     const userLoaded = e => {
       console.log(
         "I am listening to the user loaded event in vuex-oidc",
         e.detail
       );
     };
-    
+
     const oidcError = e => {
       console.log(
         "I am listening to the oidc oidcError event in vuex-oidc",
@@ -78,17 +88,17 @@ export default {
       oidcIsAuthenticated,
       hasAccess,
 
-      authenticateOidcPopup, 
+      authenticateOidcPopup,
       removeOidcUser,
 
       userLoaded,
       oidcError,
       automaticSilentRenewError,
       signOut,
-      
-      router,
-    }
-  },
+
+      router
+    };
+  }
 };
 </script>
 
