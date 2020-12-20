@@ -4,7 +4,7 @@
       <img :src="'/art/' + image.imageId" :alt="image.imageId" />
     </a>
     <div style="position: relative">
-      <button @click="deleteImage(image.id)">&times;</button>
+      <button @click="deleteImage(image)">&times;</button>
     </div>
   </li>
 </template>
@@ -20,13 +20,20 @@ export default {
   },
   setup(props, { emit }) {
     const store = useStore();
-    const { oidcIdToken } = mapGetters(store, "oidcStore", ["oidcIdToken"]);
+    const { oidcIdToken, oidcUser } = mapGetters(store, "oidcStore", ["oidcIdToken", "oidcUser"]);
 
-    async function deleteImage(imageId) {
-      await fetch(`/likes/${imageId}`, { 
-        method: "DELETE", headers: { Authorization: `Bearer ${oidcIdToken}` } 
+    async function deleteImage(image) {
+      const headers = { Authorization: `Bearer ${oidcIdToken}`, "Content-Type": "application/json" };
+      const body = {
+        ...image,
+        email: oidcUser.email,
+      };
+      await fetch(`https://localhost:8081/likes/`, { 
+        method: "DELETE",
+        headers,
+        body: JSON.stringify(body),
       });
-      emit("delete-image", imageId);
+      emit("delete-image", image);
     }
 
     return { deleteImage };

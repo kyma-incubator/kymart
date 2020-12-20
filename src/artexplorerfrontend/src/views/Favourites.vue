@@ -1,10 +1,11 @@
 <template>
   <div>
     <h1>Favourites</h1>
-    <ul v-if="images.length">
+    <p v-if="loading">Loading...</p>
+    <ul v-else-if="images.length">
       <GalleryImage
         v-for="image in images"
-        :key="image.id"
+        :key="image.imageId"
         :image="image"
         v-on:delete-image="deleteImage($event)"
       />
@@ -27,25 +28,28 @@ export default {
   },
   setup() {
     const store = useStore();
-    const { oidcUser } = mapGetters(store, "oidcStore", ["oidcUser"]);
+    const { oidcUser, oidcIdToken } = mapGetters(store, "oidcStore", ["oidcUser", "oidcIdToken"]);
     const images = ref([]);
+    const loading = ref(true);
 
     async function fetchImages() {
+      const headers = {Authorization: `Bearer ${oidcIdToken}`};
       const response = await fetch(
-        `/likes?email=${oidcUser.email}`
+        `https://localhost:8081/likes/liked?email=${oidcUser.email}`,
+        {headers}
       );
-      const result = await response.json();
-      // todo remove filtering after introducing
-      images.value = result.filter(i => !!i.imageId);
+      images.value = await response.json();
+      loading.value = false;
     }
 
-    function deleteImage(imageId) {
-      images.value = images.value.filter(image => image.id !== imageId);
+    function deleteImage(image) {
+      const { imageId, imageVersion } = image;
+      images.value = images.value.filter(i => !(i.imageId === imageId && i.imageVersion === imageVersion));
     }
 
     fetchImages();
 
-    return { images, deleteImage };
+    return { loading, images, deleteImage };
   }
 };
 </script>
