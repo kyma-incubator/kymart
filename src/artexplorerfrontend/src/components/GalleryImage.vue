@@ -28,7 +28,7 @@ export default {
         ...image,
         email: oidcUser.email,
       };
-      await fetch(`https://localhost:8081/likes/`, { 
+      await fetch(`/likes`, { 
         method: "DELETE",
         headers,
         body: JSON.stringify(body),

@@ -7,6 +7,9 @@ module.exports = {
       '^/art': {
         target: 'https://art-explorer.kyma.fun'
       },
+      '^/images': {
+        target: 'https://art-explorer.kyma.fun'
+      },
       '^/likes': {
         target: 'https://art-explorer.kyma.fun'
       }

@@ -12,7 +12,7 @@ import { ref } from "vue";
 import { useStore } from "vuex";
 import { mapGetters } from "../store";
 
-const server = 'https://localhost:8081';
+const server = '';
 
 export default {
   name: "Likes",

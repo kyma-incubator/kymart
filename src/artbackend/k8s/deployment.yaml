@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: artbackend
+spec:
+  replicas: 1
+  template:
+    spec:
+      containers:
+        - name: artbackend
+          image: ghcr.io/kyma-incubator/kymart/artbackend:latest
+          imagePullPolicy: Always
+          resources:
+            limits:
+              memory: 64Mi
+            requests:
+              memory: 32Mi          
+          ports:
+            - name: http
+              containerPort: 80
+          volumeMounts:
+          - name: secrets
+            mountPath: /app/secrets
+            readOnly: true
+      volumes:
+      - name: secrets
+        secret:
+          secretName: secret-appsettings
