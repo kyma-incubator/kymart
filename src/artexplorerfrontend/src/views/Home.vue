@@ -42,9 +42,9 @@ export default {
     }
 
     async function reload() {
-      imgSrc.value = `/art/${randomSeed.value}`;
+      imgSrc.value = `/api/art/${randomSeed.value}`;
       title.value = "Generating Title ...";
-      await fetch(`/title/${randomSeed.value}`)
+      await fetch(`/api/title/${randomSeed.value}`)
         .then(result => result.json())
         .then(result => title.value = result.title);
     }

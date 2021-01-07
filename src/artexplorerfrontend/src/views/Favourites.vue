@@ -35,7 +35,7 @@ export default {
     async function fetchImages() {
       const headers = {Authorization: `Bearer ${oidcIdToken}`};
       const response = await fetch(
-        `/likes/liked?email=${oidcUser.email}`,
+        `/api/likes/liked?email=${oidcUser.email}`,
         {headers}
       );
       images.value = await response.json();

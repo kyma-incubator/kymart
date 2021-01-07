@@ -1,7 +1,7 @@
 <template>
   <li>
     <a :href="'/' + image.imageId">
-      <img :src="'/art/' + image.imageId" :alt="image.imageId" />
+      <img :src="'/api/art/' + image.imageId" :alt="image.imageId" />
     </a>
     <div style="position: relative">
       <button @click="deleteImage(image)">&times;</button>
@@ -28,7 +28,7 @@ export default {
         ...image,
         email: oidcUser.email,
       };
-      await fetch(`/likes`, { 
+      await fetch(`/api/likes`, { 
         method: "DELETE",
         headers,
         body: JSON.stringify(body),

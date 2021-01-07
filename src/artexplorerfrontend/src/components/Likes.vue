@@ -12,8 +12,6 @@ import { ref } from "vue";
 import { useStore } from "vuex";
 import { mapGetters } from "../store";
 
-const server = '';
-
 export default {
   name: "Likes",
   props: {
@@ -32,7 +30,7 @@ export default {
     ]);
 
     function fetchLikes() {
-      let endpoint = `${server}/likes?imageId=${props.imgId}&imageVersion=${props.imgVersion}`;
+      let endpoint = `/api/likes?imageId=${props.imgId}&imageVersion=${props.imgVersion}`;
       if (oidcUser) {
         endpoint += `&email=${oidcUser.email}`;
       }
@@ -52,7 +50,7 @@ export default {
         email: oidcUser.email,
       };
       try {
-        await fetch(`${server}/likes`, {
+        await fetch(`/api/likes`, {
           method: "DELETE",
           headers: {
             Authorization: `Bearer ${oidcIdToken}`,
@@ -74,7 +72,7 @@ export default {
         email: oidcUser.email
       };
       try {
-        const response = await fetch(`${server}/likes`, {
+        const response = await fetch('/api/likes', {
           method: "POST",
           headers: { "Content-Type": "application/json", Authorization: `Bearer ${oidcIdToken}`, },
           body: JSON.stringify(body),

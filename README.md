@@ -36,4 +36,4 @@ docker push ghcr.io/kyma-incubator/kymart/<PACKAGE_NAME>:latest
 3.1 Enter `Package Settings`
 3.2 Choose `Make public` and confirm.
 
-From now one your image should be accessible for pulling.
+From now on your image should be accessible for pulling.
